@@ -3,7 +3,12 @@ package com.cooksys.serialization.assignment;
 import com.cooksys.serialization.assignment.model.*;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -17,8 +22,13 @@ public class Main {
      * @param jaxb the JAXB context to use
      * @return a {@link Student} object built using the {@link Contact} data in the given file
      */
-    public static Student readStudent(File studentContactFile, JAXBContext jaxb) {
-        return null; // TODO
+    public static Student readStudent(File studentContactFile, JAXBContext jaxb) throws JAXBException{
+    	
+    			Unmarshaller unmarshall = jaxb.createUnmarshaller();
+    			Student stu = new Student();
+    			Contact info = (Contact)unmarshall.unmarshal( studentContactFile );
+    			stu.setContact(info);
+				return stu;
     }
 
     /**
@@ -28,8 +38,20 @@ public class Main {
      * @param jaxb the JAXB context to use
      * @return a list of {@link Student} objects built using the contact files in the given directory
      */
-    public static List<Student> readStudents(File studentDirectory, JAXBContext jaxb) {
-        return null; // TODO
+    public static List<Student> readStudents(File studentDirectory, JAXBContext jaxb) throws JAXBException{
+    	
+    	File[] f = studentDirectory.listFiles();
+    	if(f == null)
+    	{
+    		 System.out.println("error");
+    		 
+    	}
+    	ArrayList<Student> students = new ArrayList<Student>();
+    	for(File emp : f)
+    	{
+    		students.add(readStudent(emp,jaxb));
+    	}
+    	return students; 
     }
 
     /**
@@ -41,8 +63,13 @@ public class Main {
      * @param jaxb the JAXB context to use
      * @return an {@link Instructor} object built using the {@link Contact} data in the given file
      */
-    public static Instructor readInstructor(File instructorContactFile, JAXBContext jaxb) {
-        return null; // TODO
+    public static Instructor readInstructor(File instructorContactFile, JAXBContext jaxb) throws JAXBException{
+    	Unmarshaller unmarshall = jaxb.createUnmarshaller();
+    	Instructor instr =  new Instructor();
+    	Contact info =(Contact)unmarshall.unmarshal( instructorContactFile );
+    	instr.setContact(info);
+		return instr;
+        //return null; // TODO
     }
 
     /**
@@ -56,8 +83,22 @@ public class Main {
      * @param jaxb the JAXB context to use
      * @return a {@link Session} object built from the data in the given directory
      */
-    public static Session readSession(File rootDirectory, JAXBContext jaxb) {
-        return null; // TODO
+    public static Session readSession(File rootDirectory, JAXBContext jaxb) throws JAXBException{
+
+    	Session sess = new Session();
+    	
+    	File dateName = new File("input\\memphis\\08-08-2016");
+    	File instr = new File("input\\memphis\\08-08-2016\\instructor.xml");
+    	File studentdir = new File("input\\memphis\\08-08-2016\\students");
+    	
+    	sess.setInstructor(readInstructor(instr,jaxb));
+    	sess.setStartDate(dateName.getName());
+    	sess.setLocation(rootDirectory.getName());
+    	sess.setStudents(readStudents(studentdir,jaxb));
+    	
+    	return sess;
+    	
+       // return null; // TODO
     }
 
     /**
@@ -67,8 +108,10 @@ public class Main {
      * @param sessionFile the file to which the session is to be written
      * @param jaxb the JAXB context to use
      */
-    public static void writeSession(Session session, File sessionFile, JAXBContext jaxb) {
-        // TODO
+    public static void writeSession(Session session, File sessionFile, JAXBContext jaxb) throws JAXBException {
+    	Marshaller  marsh= jaxb.createMarshaller();
+    	marsh.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+    	marsh.marshal(session,sessionFile);
     }
 
     /**
@@ -98,6 +141,15 @@ public class Main {
      *      </session>
      */
     public static void main(String[] args) {
+    	try{
+    		JAXBContext compress = JAXBContext.newInstance(Session.class);
+        	writeSession(readSession(new File("input/memphis"),compress),new File("output/session.xml"),compress);
+    	}
+    	catch (JAXBException e)
+    	{
+    		e.printStackTrace();
+    	}
+    	
         // TODO
     }
 }

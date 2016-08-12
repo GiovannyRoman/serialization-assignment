@@ -1,40 +1,51 @@
 package com.cooksys.serialization.assignment.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Contact {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
 
-    public String getFirstName() {
-        return firstName;
-    }
+	@XmlAttribute(name = "first-name")
+	private String firstName;
+	@XmlAttribute(name = "last-name")
+	private String lastName;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	private String email;
+	private String phoneNumber;
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 }
